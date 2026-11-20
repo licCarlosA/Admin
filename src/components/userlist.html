@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de usuarios | LuxuryCars</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        color: #332d29;
+        background: transparent;
+        font-family: Arial, sans-serif;
+      }
+
+      .user-list {
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #eee8df;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(39, 27, 21, 0.04);
+      }
+
+      .user-list__table-wrap {
+        overflow-x: auto;
+      }
+
+      .user-list__table {
+        width: 100%;
+        min-width: 980px;
+        border-collapse: collapse;
+        text-align: left;
+      }
+
+      .user-list__table th {
+        padding: 15px 16px;
+        color: #8a8179;
+        background: #fcfbf9;
+        border-bottom: 1px solid #eee8df;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .user-list__table td {
+        padding: 14px 16px;
+        color: #514840;
+        border-bottom: 1px solid #f1ede8;
+        font-size: 13px;
+      }
+
+      .user-list__table tbody tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .user-list__id {
+        color: #8c6b3f;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .user-list__email {
+        color: #70665e;
+      }
+
+      .user-list__role {
+        display: inline-block;
+        padding: 5px 9px;
+        color: #5b1528;
+        background: #f8f4ef;
+        border-radius: 20px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
+      .user-list__actions {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        white-space: nowrap;
+      }
+
+      .user-list__action {
+        display: grid;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        color: #5b1528;
+        background: #fff;
+        border: 1px solid #e8dfd4;
+        border-radius: 6px;
+        cursor: pointer;
+        place-items: center;
+        transition: background-color 140ms ease, border-color 140ms ease;
+      }
+
+      .user-list__action:hover {
+        background: #f8f4ef;
+        border-color: #c9a45c;
+      }
+
+      .user-list__action--delete {
+        color: #a33a3a;
+      }
+
+      .user-list__action svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.7;
+      }
+
+      .user-list__action:focus-visible,
+      .user-list__switch input:focus-visible + .user-list__switch-track {
+        outline: 2px solid #c9a45c;
+        outline-offset: 2px;
+      }
+
+      .user-list__switch {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        margin-left: 5px;
+        cursor: pointer;
+      }
+
+      .user-list__switch input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+      }
+
+      .user-list__switch-track {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+        background: #c9c1b8;
+        border-radius: 20px;
+        transition: background-color 150ms ease;
+      }
+
+      .user-list__switch-track::after {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 14px;
+        height: 14px;
+        background: #fff;
+        border-radius: 50%;
+        content: "";
+        transition: transform 150ms ease;
+      }
+
+      .user-list__switch input:checked + .user-list__switch-track {
+        background: #5b1528;
+      }
+
+      .user-list__switch input:checked + .user-list__switch-track::after {
+        transform: translateX(16px);
+      }
+
+      .user-list__status {
+        min-width: 53px;
+        color: #35654a;
+        font-size: 11px;
+      }
+
+      .user-list__status--inactive {
+        color: #8a8179;
+      }
+
+      .user-list__dialog {
+        width: min(440px, calc(100vw - 32px));
+        max-height: calc(100vh - 32px);
+        padding: 0;
+        overflow-y: auto;
+        background: #fff;
+        border: 1px solid #eee8df;
+        border-radius: 10px;
+        box-shadow: 0 16px 48px rgba(39, 27, 21, 0.2);
+      }
+
+      .user-list__dialog::backdrop {
+        background: rgba(32, 24, 21, 0.4);
+      }
+
+      .user-list__dialog-content {
+        display: grid;
+        gap: 16px;
+        padding: 24px;
+      }
+
+      .user-list__dialog-content[hidden] {
+        display: none;
+      }
+
+      .user-list__dialog-title {
+        margin: 0 0 4px;
+        color: #352c28;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+      }
+
+      .user-list__field {
+        display: grid;
+        gap: 6px;
+        color: #625951;
+        font-size: 13px;
+      }
+
+      .user-list__field input,
+      .user-list__field select {
+        width: 100%;
+        min-height: 38px;
+        padding: 8px 10px;
+        color: #332d29;
+        background: #fff;
+        border: 1px solid #dcd3c9;
+        border-radius: 6px;
+        font: inherit;
+      }
+
+      .user-list__dialog-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .user-list__dialog-button {
+        min-height: 38px;
+        padding: 0 14px;
+        color: #5b1528;
+        background: #fff;
+        border: 1px solid #e8dfd4;
+        border-radius: 6px;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+      }
+
+      .user-list__dialog-button--primary {
+        color: #fff;
+        background: #5b1528;
+        border-color: #5b1528;
+      }
+
+      .user-list__detail-list {
+        display: grid;
+        gap: 12px;
+        margin: 0;
+      }
+
+      .user-list__detail-list div {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+      }
+
+      .user-list__detail-list dt {
+        color: #8a8179;
+        font-size: 12px;
+      }
+
+      .user-list__detail-list dd {
+        margin: 0;
+        color: #3e342f;
+        font-size: 13px;
+      }
+
+      @media (max-width: 640px) {
+        .user-list__table th,
+        .user-list__table td {
+          padding-right: 12px;
+          padding-left: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="user-list">
+      <div class="user-list__table-wrap">
+        <table class="user-list__table">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="user-list__id">U-001</td>
+              <td>Ana</td>
+              <td>García</td>
+              <td class="user-list__email">ana.garcia@example.com</td>
+              <td><span class="user-list__role">Administradora</span></td>
+              <td>
+                <div class="user-list__actions">
+                  <button class="user-list__action" type="button" data-user-action="edit" aria-label="Editar a Ana García" title="Editar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20Z"></path></svg>
+                  </button>
+                  <button class="user-list__action user-list__action--delete" type="button" data-user-action="delete" aria-label="Eliminar a Ana García" title="Eliminar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+                  </button>
+                  <button class="user-list__action" type="button" data-user-action="details" aria-label="Detalles de Ana García" title="Detalles">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
+                  </button>
+                  <label class="user-list__switch" title="Activar o desactivar a Ana García">
+                    <input type="checkbox" role="switch" checked aria-label="Desactivar a Ana García" data-user-toggle data-user-name="Ana García">
+                    <span class="user-list__switch-track"></span>
+                  </label>
+                  <span class="user-list__status" data-user-status>Activo</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="user-list__id">U-002</td>
+              <td>Carlos</td>
+              <td>Méndez</td>
+              <td class="user-list__email">carlos.mendez@example.com</td>
+              <td><span class="user-list__role">Vendedor</span></td>
+              <td>
+                <div class="user-list__actions">
+                  <button class="user-list__action" type="button" data-user-action="edit" aria-label="Editar a Carlos Méndez" title="Editar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20Z"></path></svg>
+                  </button>
+                  <button class="user-list__action user-list__action--delete" type="button" data-user-action="delete" aria-label="Eliminar a Carlos Méndez" title="Eliminar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+                  </button>
+                  <button class="user-list__action" type="button" data-user-action="details" aria-label="Detalles de Carlos Méndez" title="Detalles">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
+                  </button>
+                  <label class="user-list__switch" title="Activar o desactivar a Carlos Méndez">
+                    <input type="checkbox" role="switch" checked aria-label="Desactivar a Carlos Méndez" data-user-toggle data-user-name="Carlos Méndez">
+                    <span class="user-list__switch-track"></span>
+                  </label>
+                  <span class="user-list__status" data-user-status>Activo</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="user-list__id">U-003</td>
+              <td>Lucía</td>
+              <td>Torres</td>
+              <td class="user-list__email">lucia.torres@example.com</td>
+              <td><span class="user-list__role">Inventario</span></td>
+              <td>
+                <div class="user-list__actions">
+                  <button class="user-list__action" type="button" data-user-action="edit" aria-label="Editar a Lucía Torres" title="Editar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20Z"></path></svg>
+                  </button>
+                  <button class="user-list__action user-list__action--delete" type="button" data-user-action="delete" aria-label="Eliminar a Lucía Torres" title="Eliminar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+                  </button>
+                  <button class="user-list__action" type="button" data-user-action="details" aria-label="Detalles de Lucía Torres" title="Detalles">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
+                  </button>
+                  <label class="user-list__switch" title="Activar o desactivar a Lucía Torres">
+                    <input type="checkbox" role="switch" aria-label="Activar a Lucía Torres" data-user-toggle data-user-name="Lucía Torres">
+                    <span class="user-list__switch-track"></span>
+                  </label>
+                  <span class="user-list__status user-list__status--inactive" data-user-status>Inactivo</span>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="user-list__id">U-004</td>
+              <td>Mateo</td>
+              <td>Rivera</td>
+              <td class="user-list__email">mateo.rivera@example.com</td>
+              <td><span class="user-list__role">Vendedor</span></td>
+              <td>
+                <div class="user-list__actions">
+                  <button class="user-list__action" type="button" data-user-action="edit" aria-label="Editar a Mateo Rivera" title="Editar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.2-.8L19 8.4 15.6 5 4.8 15.8 4 20Z"></path></svg>
+                  </button>
+                  <button class="user-list__action user-list__action--delete" type="button" data-user-action="delete" aria-label="Eliminar a Mateo Rivera" title="Eliminar">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>
+                  </button>
+                  <button class="user-list__action" type="button" data-user-action="details" aria-label="Detalles de Mateo Rivera" title="Detalles">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg>
+                  </button>
+                  <label class="user-list__switch" title="Activar o desactivar a Mateo Rivera">
+                    <input type="checkbox" role="switch" checked aria-label="Desactivar a Mateo Rivera" data-user-toggle data-user-name="Mateo Rivera">
+                    <span class="user-list__switch-track"></span>
+                  </label>
+                  <span class="user-list__status" data-user-status>Activo</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <dialog class="user-list__dialog" id="user-list-dialog">
+      <form class="user-list__dialog-content" id="user-edit-form">
+        <h2 class="user-list__dialog-title">Editar usuario</h2>
+        <label class="user-list__field">Nombre<input name="firstName" required></label>
+        <label class="user-list__field">Apellido<input name="lastName" required></label>
+        <label class="user-list__field">Email<input name="email" type="email" required></label>
+        <label class="user-list__field">
+          Role
+          <select name="role">
+            <option>Administradora</option>
+            <option>Vendedor</option>
+            <option>Inventario</option>
+          </select>
+        </label>
+        <div class="user-list__dialog-actions">
+          <button class="user-list__dialog-button" type="button" data-dialog-close>Cancelar</button>
+          <button class="user-list__dialog-button user-list__dialog-button--primary" type="submit">Guardar</button>
+        </div>
+      </form>
+
+      <div class="user-list__dialog-content" id="user-details" hidden>
+        <h2 class="user-list__dialog-title">Detalles del usuario</h2>
+        <dl class="user-list__detail-list">
+          <div><dt>ID</dt><dd data-detail="id"></dd></div>
+          <div><dt>Nombre</dt><dd data-detail="name"></dd></div>
+          <div><dt>Apellido</dt><dd data-detail="lastName"></dd></div>
+          <div><dt>Email</dt><dd data-detail="email"></dd></div>
+          <div><dt>Role</dt><dd data-detail="role"></dd></div>
+          <div><dt>Estado</dt><dd data-detail="status"></dd></div>
+        </dl>
+        <div class="user-list__dialog-actions">
+          <button class="user-list__dialog-button user-list__dialog-button--primary" type="button" data-dialog-close>Cerrar</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      const dialog = document.querySelector("#user-list-dialog");
+      const editForm = document.querySelector("#user-edit-form");
+      const detailsPanel = document.querySelector("#user-details");
+      let editingRow;
+
+      document.querySelectorAll("[data-user-toggle]").forEach((toggle) => {
+        toggle.addEventListener("change", () => {
+          const status = toggle.closest("tr").querySelector("[data-user-status]");
+          const isActive = toggle.checked;
+
+          status.textContent = isActive ? "Activo" : "Inactivo";
+          status.classList.toggle("user-list__status--inactive", !isActive);
+          toggle.setAttribute("aria-label", `${isActive ? "Desactivar" : "Activar"} a ${toggle.dataset.userName}`);
+        });
+      });
+
+      document.querySelectorAll("[data-user-action]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const row = button.closest("tr");
+          const values = {
+            id: row.cells[0].textContent.trim(),
+            name: row.cells[1].textContent.trim(),
+            lastName: row.cells[2].textContent.trim(),
+            email: row.cells[3].textContent.trim(),
+            role: row.cells[4].textContent.trim(),
+            status: row.querySelector("[data-user-status]").textContent.trim()
+          };
+
+          if (button.dataset.userAction === "delete") {
+            if (window.confirm(`¿Eliminar al usuario ${values.name} ${values.lastName}?`)) {
+              row.remove();
+            }
+            return;
+          }
+
+          editingRow = row;
+          if (button.dataset.userAction === "edit") {
+            editForm.hidden = false;
+            detailsPanel.hidden = true;
+            editForm.elements.namedItem("firstName").value = values.name;
+            editForm.elements.namedItem("lastName").value = values.lastName;
+            editForm.elements.namedItem("email").value = values.email;
+            editForm.elements.namedItem("role").value = values.role;
+          } else {
+            editForm.hidden = true;
+            detailsPanel.hidden = false;
+            Object.entries(values).forEach(([key, value]) => {
+              detailsPanel.querySelector(`[data-detail="${key}"]`).textContent = value;
+            });
+          }
+
+          dialog.showModal();
+        });
+      });
+
+      editForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(editForm);
+        const firstName = formData.get("firstName").trim();
+        const lastName = formData.get("lastName").trim();
+        const email = formData.get("email").trim();
+        const role = formData.get("role");
+        const fullName = `${firstName} ${lastName}`;
+        const switchInput = editingRow.querySelector("[data-user-toggle]");
+
+        editingRow.cells[1].textContent = firstName;
+        editingRow.cells[2].textContent = lastName;
+        editingRow.cells[3].textContent = email;
+        editingRow.cells[4].querySelector(".user-list__role").textContent = role;
+        editingRow.querySelector('[data-user-action="edit"]').setAttribute("aria-label", `Editar a ${fullName}`);
+        editingRow.querySelector('[data-user-action="delete"]').setAttribute("aria-label", `Eliminar a ${fullName}`);
+        editingRow.querySelector('[data-user-action="details"]').setAttribute("aria-label", `Detalles de ${fullName}`);
+        switchInput.dataset.userName = fullName;
+        switchInput.closest("label").title = `Activar o desactivar a ${fullName}`;
+        switchInput.setAttribute("aria-label", `${switchInput.checked ? "Desactivar" : "Activar"} a ${fullName}`);
+
+        dialog.close();
+      });
+
+      dialog.querySelectorAll("[data-dialog-close]").forEach((button) => {
+        button.addEventListener("click", () => dialog.close());
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo usuario | LuxuryCars</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        padding: 32px;
+        color: #332d29;
+        background: #f7f6f3;
+        font-family: Arial, sans-serif;
+      }
+
+      .new-user {
+        max-width: 760px;
+        margin: 0 auto;
+      }
+
+      .new-user__header {
+        margin-bottom: 24px;
+      }
+
+      .new-user__eyebrow {
+        margin: 0 0 8px;
+        color: #8c6b3f;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .new-user__title {
+        margin: 0;
+        color: #352c28;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(24px, 3vw, 32px);
+      }
+
+      .new-user__description {
+        margin: 8px 0 0;
+        color: #766d66;
+        font-size: 14px;
+      }
+
+      .new-user__form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        padding: 24px;
+        background: #fff;
+        border: 1px solid #eee8df;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(39, 27, 21, 0.04);
+      }
+
+      .new-user__field {
+        display: grid;
+        gap: 7px;
+        color: #514840;
+        font-size: 13px;
+        font-weight: 600;
+      }
+
+      .new-user__field input,
+      .new-user__field select {
+        width: 100%;
+        min-height: 42px;
+        padding: 10px 12px;
+        color: #332d29;
+        background: #fff;
+        border: 1px solid #dcd3c9;
+        border-radius: 6px;
+        font: inherit;
+        font-weight: 400;
+      }
+
+      .new-user__field input:focus,
+      .new-user__field select:focus {
+        border-color: #8c6b3f;
+        outline: 2px solid rgba(201, 164, 92, 0.25);
+      }
+
+      .new-user__field--full {
+        grid-column: 1 / -1;
+      }
+
+      .new-user__active {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #514840;
+        font-size: 13px;
+      }
+
+      .new-user__active input {
+        width: 17px;
+        height: 17px;
+        accent-color: #5b1528;
+      }
+
+      .new-user__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        grid-column: 1 / -1;
+        padding-top: 6px;
+        border-top: 1px solid #f1ede8;
+      }
+
+      .new-user__button {
+        min-height: 40px;
+        padding: 0 16px;
+        color: #5b1528;
+        background: #fff;
+        border: 1px solid #e8dfd4;
+        border-radius: 6px;
+        cursor: pointer;
+        font: inherit;
+        font-size: 13px;
+      }
+
+      .new-user__button--primary {
+        color: #fff;
+        background: #5b1528;
+        border-color: #5b1528;
+      }
+
+      .new-user__button:hover {
+        border-color: #c9a45c;
+      }
+
+      .new-user__button--primary:hover {
+        background: #741e36;
+      }
+
+      .new-user__button:focus-visible {
+        outline: 2px solid #c9a45c;
+        outline-offset: 2px;
+      }
+
+      .new-user__message {
+        display: none;
+        grid-column: 1 / -1;
+        margin: 0;
+        padding: 11px 12px;
+        color: #6d4e22;
+        background: #fbf5e8;
+        border-radius: 6px;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .new-user__message.is-visible {
+        display: block;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 22px 14px;
+        }
+
+        .new-user__form {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 14px;
+          padding: 18px;
+        }
+
+        .new-user__field--full,
+        .new-user__actions,
+        .new-user__message {
+          grid-column: auto;
+        }
+
+        .new-user__actions {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="new-user">
+      <header class="new-user__header">
+        <p class="new-user__eyebrow">LuxuryCars</p>
+        <h1 class="new-user__title">Registrar nuevo usuario</h1>
+        <p class="new-user__description">Completa los datos para crear una cuenta de usuario.</p>
+      </header>
+
+      <form class="new-user__form" id="new-user-form">
+        <label class="new-user__field">
+          Nombre
+          <input name="firstName" autocomplete="given-name" required>
+        </label>
+
+        <label class="new-user__field">
+          Apellido
+          <input name="lastName" autocomplete="family-name" required>
+        </label>
+
+        <label class="new-user__field new-user__field--full">
+          Email
+          <input name="email" type="email" autocomplete="email" required>
+        </label>
+
+        <label class="new-user__field new-user__field--full">
+          Role
+          <select name="role" required>
+            <option value="" selected disabled>Selecciona un role</option>
+            <option value="Administradora">Administradora</option>
+            <option value="Vendedor">Vendedor</option>
+            <option value="Inventario">Inventario</option>
+          </select>
+        </label>
+
+        <label class="new-user__field">
+          Contraseña
+          <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+
+        <label class="new-user__field">
+          Confirmar contraseña
+          <input name="confirmPassword" type="password" autocomplete="new-password" minlength="8" required>
+        </label>
+
+        <label class="new-user__active new-user__field--full">
+          <input name="active" type="checkbox" checked>
+          Usuario activo
+        </label>
+
+        <p class="new-user__message" id="new-user-message" role="status" aria-live="polite"></p>
+
+        <div class="new-user__actions">
+          <button class="new-user__button" type="reset">Limpiar</button>
+          <button class="new-user__button new-user__button--primary" type="submit">Registrar usuario</button>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      const newUserForm = document.querySelector("#new-user-form");
+      const passwordInput = newUserForm.elements.namedItem("password");
+      const confirmPasswordInput = newUserForm.elements.namedItem("confirmPassword");
+      const message = document.querySelector("#new-user-message");
+
+      function validatePasswordMatch() {
+        const passwordsMatch = passwordInput.value === confirmPasswordInput.value;
+        confirmPasswordInput.setCustomValidity(
+          passwordsMatch ? "" : "Las contraseñas no coinciden."
+        );
+      }
+
+      passwordInput.addEventListener("input", validatePasswordMatch);
+      confirmPasswordInput.addEventListener("input", validatePasswordMatch);
+
+      newUserForm.addEventListener("reset", () => {
+        message.classList.remove("is-visible");
+        confirmPasswordInput.setCustomValidity("");
+      });
+
+      newUserForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        validatePasswordMatch();
+
+        if (!newUserForm.reportValidity()) {
+          return;
+        }
+
+        message.textContent =
+          "Los datos son válidos, pero el usuario no se guardó porque este formulario aún no está conectado a un servidor.";
+        message.classList.add("is-visible");
+      });
+    </script>
+  </body>
+</html>

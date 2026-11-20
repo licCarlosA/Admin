@@ -1,0 +1,83 @@
+<link rel="stylesheet" href="../assets/css/sidebar.css">
+
+<aside class="luxury-sidebar">
+  <nav class="luxury-sidebar__nav" id="luxury-sidebar-nav" aria-label="Menú lateral">
+    <a class="luxury-sidebar__link luxury-sidebar__link--active" href="#dashboard" aria-current="page" title="Dashboard" data-dashboard-view="dashboard">
+      <svg class="luxury-sidebar__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="3.5" y="3.5" width="7" height="7" rx="1"></rect>
+        <rect x="13.5" y="3.5" width="7" height="7" rx="1"></rect>
+        <rect x="3.5" y="13.5" width="7" height="7" rx="1"></rect>
+        <rect x="13.5" y="13.5" width="7" height="7" rx="1"></rect>
+      </svg>
+      <span class="luxury-sidebar__label">Dashboard</span>
+    </a>
+
+    <section class="luxury-sidebar__group" aria-labelledby="config-title">
+      <h2 class="luxury-sidebar__summary" id="config-title">
+        <svg class="luxury-sidebar__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.7 2.9-.2-.1a1.7 1.7 0 0 0-1.9.2l-.2.1h-3.4l-.1-.2a1.7 1.7 0 0 0-1.5-1.1 1.7 1.7 0 0 0-1 .2l-.2.1-2.9-1.7.1-.2a1.7 1.7 0 0 0-.2-1.9l-.1-.2v-3.4l.2-.1a1.7 1.7 0 0 0 1.1-1.5 1.7 1.7 0 0 0-.2-1l-.1-.2 1.7-2.9.2.1a1.7 1.7 0 0 0 1.9-.2l.2-.1h3.4l.1.2a1.7 1.7 0 0 0 1.5 1.1 1.7 1.7 0 0 0 1-.2l.2-.1 2.9 1.7-.1.2a1.7 1.7 0 0 0 .2 1.9l.1.2v3.4l-.2.1a1.7 1.7 0 0 0-1.2 1.1Z"></path>
+        </svg>
+        <span class="luxury-sidebar__label">Config</span>
+      </h2>
+      <div class="luxury-sidebar__submenu">
+        <a class="luxury-sidebar__sub-link" href="#config-password" title="Password"><span class="luxury-sidebar__label">Password</span></a>
+        <a class="luxury-sidebar__sub-link" href="#config-email" title="Email"><span class="luxury-sidebar__label">Email</span></a>
+      </div>
+    </section>
+
+    <section class="luxury-sidebar__group" aria-labelledby="usuarios-title">
+      <h2 class="luxury-sidebar__summary" id="usuarios-title">
+        <svg class="luxury-sidebar__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="9" cy="8" r="3"></circle>
+          <path d="M3.5 19c.5-3 2.3-4.5 5.5-4.5s5 1.5 5.5 4.5"></path>
+          <path d="M15 5.5a3 3 0 0 1 0 5.8M16 14.8c2.6.4 4 1.8 4.5 4.2"></path>
+        </svg>
+        <span class="luxury-sidebar__label">Usuarios</span>
+      </h2>
+      <div class="luxury-sidebar__submenu">
+        <a class="luxury-sidebar__sub-link" href="#usuarios-admin" title="Admin" data-dashboard-view="admin"><span class="luxury-sidebar__label">Admin</span></a>
+        <a class="luxury-sidebar__sub-link" href="#usuarios-restor" title="Restor"><span class="luxury-sidebar__label">Restor</span></a>
+      </div>
+    </section>
+
+    <section class="luxury-sidebar__group" aria-labelledby="inventario-title">
+      <h2 class="luxury-sidebar__summary" id="inventario-title">
+        <svg class="luxury-sidebar__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 3 8.5 4.5v9L12 21l-8.5-4.5v-9L12 3Z"></path>
+          <path d="m3.8 7.7 8.2 4.5 8.2-4.5M12 12.2V21"></path>
+        </svg>
+        <span class="luxury-sidebar__label">Inventario</span>
+      </h2>
+      <div class="luxury-sidebar__submenu">
+        <a class="luxury-sidebar__sub-link" href="#inventario-productos" title="Productos"><span class="luxury-sidebar__label">Productos</span></a>
+        <a class="luxury-sidebar__sub-link" href="#inventario-entrada" title="Entrada"><span class="luxury-sidebar__label">Entrada</span></a>
+        <a class="luxury-sidebar__sub-link" href="#inventario-salida" title="Salida"><span class="luxury-sidebar__label">Salida</span></a>
+      </div>
+    </section>
+  </nav>
+</aside>
+
+<script>
+  document.querySelectorAll("[data-dashboard-view]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      document.querySelectorAll("[data-dashboard-view]").forEach((item) => {
+        const isCurrent = item === link;
+        item.classList.toggle("luxury-sidebar__link--active", isCurrent);
+        item.classList.toggle("luxury-sidebar__sub-link--active", isCurrent);
+        if (isCurrent) {
+          item.setAttribute("aria-current", "page");
+        } else {
+          item.removeAttribute("aria-current");
+        }
+      });
+
+      window.parent.postMessage(
+        { type: "luxury-dashboard-view", view: link.dataset.dashboardView },
+        "*"
+      );
+    });
+  });
+</script>

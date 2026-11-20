@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administración | LuxuryCars</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        color: #332d29;
+        background: #f7f6f3;
+        font-family: Arial, sans-serif;
+      }
+
+      .user-admin__layout {
+        display: grid;
+        grid-template-columns: 260px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .user-admin__sidebar-frame {
+        display: block;
+        width: 260px;
+        height: 100vh;
+        min-height: 540px;
+        border: 0;
+      }
+
+      .user-admin__main {
+        min-width: 0;
+        padding: 32px clamp(16px, 3vw, 40px);
+      }
+
+      .user-admin {
+        max-width: 1280px;
+        margin: 0 auto;
+      }
+
+      .user-admin__header {
+        margin-bottom: 24px;
+      }
+
+      .user-admin__eyebrow {
+        margin: 0 0 8px;
+        color: #8c6b3f;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .user-admin__title {
+        margin: 0;
+        color: #352c28;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(24px, 3vw, 32px);
+      }
+
+      .user-admin__description {
+        margin: 8px 0 0;
+        color: #766d66;
+        font-size: 14px;
+      }
+
+      .user-admin__accordion {
+        margin-bottom: 24px;
+        background: #fff;
+        border: 1px solid #eee8df;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(39, 27, 21, 0.04);
+      }
+
+      .user-admin__accordion > summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 54px;
+        padding: 0 18px;
+        color: #5b1528;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        list-style: none;
+      }
+
+      .user-admin__accordion > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .user-admin__accordion > summary::after {
+        content: "+";
+        color: #8c6b3f;
+        font-size: 22px;
+        font-weight: 400;
+      }
+
+      .user-admin__accordion[open] > summary::after {
+        content: "−";
+      }
+
+      .user-admin__accordion > summary:focus-visible {
+        outline: 2px solid #c9a45c;
+        outline-offset: -3px;
+      }
+
+      .user-admin__new-user-frame {
+        display: block;
+        width: 100%;
+        height: 680px;
+        border: 0;
+        border-top: 1px solid #eee8df;
+      }
+
+      .user-admin__list-frame {
+        display: block;
+        width: 100%;
+        height: 420px;
+        border: 0;
+      }
+
+      @media (max-width: 760px) {
+        .user-admin__layout {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .user-admin__sidebar-frame {
+          width: 100%;
+          height: 520px;
+          min-height: 520px;
+        }
+
+        .user-admin__main {
+          padding: 22px 14px;
+        }
+
+        .user-admin__new-user-frame {
+          height: 720px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="user-admin__layout">
+      <iframe
+        class="user-admin__sidebar-frame"
+        src="../components/sidebar.html"
+        title="Menú lateral de LuxuryCars"
+      ></iframe>
+      <main class="user-admin__main">
+        <section class="user-admin" aria-labelledby="user-admin-title">
+          <header class="user-admin__header">
+            <p class="user-admin__eyebrow">LuxuryCars</p>
+            <h1 class="user-admin__title" id="user-admin-title">Administración</h1>
+            <p class="user-admin__description">Gestión de usuarios. Datos de ejemplo.</p>
+          </header>
+
+          <details class="user-admin__accordion">
+            <summary>Registrar nuevo usuario</summary>
+            <iframe
+              class="user-admin__new-user-frame"
+              src="../components/usernew.html"
+              title="Formulario para registrar un usuario"
+            ></iframe>
+          </details>
+
+          <iframe
+            class="user-admin__list-frame"
+            src="../components/userlist.html"
+            title="Lista de usuarios"
+          ></iframe>
+        </section>
+      </main>
+    </div>
+    <script>
+      const sidebarFrame = document.querySelector(".user-admin__sidebar-frame");
+
+      window.addEventListener("message", (event) => {
+        if (event.source !== sidebarFrame.contentWindow) {
+          return;
+        }
+
+        const message = event.data;
+        if (!message || message.type !== "luxury-dashboard-view") {
+          return;
+        }
+
+        window.parent.postMessage(message, "*");
+      });
+    </script>
+  </body>
+</html>
